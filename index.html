@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vertex Collision | Refacciones y Carrocería</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <header>
+        <h1>Vertex Collision</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="login.html" id="nav-login">Iniciar Sesión</a>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Banner de bienvenida tipo Autobox -->
+        <section class="hero-banner">
+            <div class="hero-contenido">
+                <span class="subtitulo-naranja">PRECISIÓN PARA CADA CAMINO</span>
+                <h2>LA PIEZA CORRECTA.<br>SIN ERRORES.</h2>
+                <p>Encuentra refacciones compatibles con tu auto, compara opciones y recíbelas donde estés.</p>
+                <a href="catalogo.html" class="btn-primario-grande" style="display: inline-block; width: auto; text-decoration: none;">Explorar Catálogo</a>
+            </div>
+        </section>
+
+        <!-- Sección de productos destacados -->
+        <section class="seccion-destacados">
+            <div class="encabezado-destacados">
+                <span class="subtitulo-naranja">SELECCIÓN VERTEX</span>
+                <h2>Los favoritos del taller</h2>
+                <p>Calidad profesional, elegida por quienes más saben.</p>
+            </div>
+            
+            <!-- Contenedor donde JavaScript inyectará las tarjetas -->
+            <div id="contenedor-destacados" class="grid-productos">
+                <!-- Se llena dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Carga de scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>

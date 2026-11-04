@@ -1,0 +1,94 @@
+.contenedor-auth {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 150px);
+    padding: 2rem 5%;
+}
+
+.formulario-caja {
+    background-color: var(--color-fondo-tarjeta); /* Usar variable global */
+    border: 1px solid var(--color-borde);
+    color: var(--color-texto-principal);
+    padding: 40px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 450px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+.formulario-caja h2 {
+    margin-bottom: 10px;
+    text-align: center;
+    color: var(--color-texto);
+    color: white;
+}
+
+.formulario-caja p {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #aaa;
+    font-size: 0.9rem;
+}
+
+.grupo-input {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.grupo-input label {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #ccc;
+}
+
+.grupo-input input {
+    padding: 12px;
+    border: 1px solid var(--color-borde);
+    background-color: var(--color-fondo-base);
+    color: var(--color-texto-principal);
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.grupo-input input:focus {
+    border-color: var(--color-primario);
+}
+
+/* Reutilizamos el botón de producto.css adaptado */
+.btn-primario-grande {
+    width: 100%;
+    background-color: #ff5722;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.btn-primario-grande:hover {
+    background-color: #e64a19;
+}
+
+.enlace-auth {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.enlace-auth a {
+    color: #ff5722;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.enlace-auth a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,83 @@
+.lista-carrito {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-carrito {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-fondo-tarjeta);
+    padding: 15px;
+    border: 1px solid var(--color-borde);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+.item-info h4 {
+    color: var(--color-texto-principal);
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.item-controles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Adaptación del input de cantidad para el tema oscuro */
+.item-controles input {
+    width: 60px;
+    padding: 8px;
+    text-align: center;
+    background-color: var(--color-fondo-base);
+    color: var(--color-texto-principal);
+    border: 1px solid var(--color-borde);
+    border-radius: 4px;
+    outline: none;
+}
+
+.item-controles input:focus {
+    border-color: var(--color-primario);
+}
+
+.btn-eliminar {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn-eliminar:hover {
+    background-color: #d32f2f;
+}
+
+.resumen-total {
+    margin-top: 30px;
+    text-align: right;
+    padding-top: 20px;
+    border-top: 2px solid var(--color-borde);
+}
+
+.btn-accion {
+    background-color: var(--color-primario);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s;
+}
+
+.btn-accion:hover {
+    background-color: var(--color-primario-hover);
+}

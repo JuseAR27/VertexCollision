@@ -1,0 +1,99 @@
+:root {
+    --color-primario: #d32f2f; /* Rojo automotriz */
+    --color-secundario: #333333; /* Gris oscuro / asfalto */
+    --color-fondo: #f8f9fa;
+    --color-texto: #212529;
+    --fuente-principal: 'Arial', sans-serif;
+}
+
+/* Reset básico para asegurar consistencia entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* css/style.css */
+:root {
+    /* Nueva Paleta de Colores - Estilo Autobox Dark */
+    --color-primario: #ff5722; /* Naranja vibrante de Autobox */
+    --color-primario-hover: #e64a19;
+    --color-fondo-base: #10141d; /* Azul muy oscuro para el fondo general */
+    --color-fondo-tarjeta: #1c212c; /* Azul grisáceo para tarjetas y paneles */
+    --color-texto-principal: #ffffff; /* Texto blanco para legibilidad */
+    --color-texto-secundario: #9ca3af; /* Gris claro para textos secundarios */
+    --color-borde: #2d3748; /* Bordes oscuros y sutiles */
+    --fuente-principal: 'Inter', 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+}
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo-base);
+    color: var(--color-texto-principal);
+    line-height: 1.6;
+}
+
+/* Encabezado y Navegación */
+header {
+    background-color: var(--color-fondo-base);
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+header h1 {
+    color: var(--color-primario);
+    font-size: 1.8rem;
+    letter-spacing: -0.5px;
+}
+
+nav a {
+    color: var(--color-texto-principal);
+    text-decoration: none;
+    margin-left: 25px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+nav a:hover {
+    color: var(--color-primario);
+}
+
+/* Estilos de tipografía general */
+h2, h3, h4 {
+    color: var(--color-texto-principal);
+}
+
+p {
+    color: var(--color-texto-secundario);
+}
+
+@media (max-width: 768px) {
+    header {
+        flex-direction: column; /* Apila el título y los enlaces verticalmente */
+        align-items: flex-start;
+        gap: 15px; /* Espacio entre el título y los enlaces */
+        padding: 1.5rem 20px;
+    }
+
+    nav {
+        display: flex;
+        flex-wrap: wrap; /* Permite que los enlaces pasen a la siguiente línea si no caben */
+        gap: 15px;
+    }
+
+    nav a {
+        margin-left: 0; /* Quitamos el margen izquierdo porque ahora usan 'gap' */
+        font-size: 0.9rem;
+    }
+}

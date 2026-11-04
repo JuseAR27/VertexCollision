@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Producto | Vertex Collision</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/producto.css">
+</head>
+<body>
+    <header>
+        <h1>Vertex Collision</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="login.html" id="nav-login">Iniciar Sesión</a>
+        </nav>
+    </header>
+
+    <main class="contenedor-producto">
+        <!-- Migas de pan (Breadcrumbs) -->
+        <div class="breadcrumb">
+            Inicio / <span id="bread-categoria">Categoría</span> / <strong id="bread-nombre">Producto</strong>
+        </div>
+
+        <!-- Sección Superior: Galería e Información Principal -->
+        <section class="producto-principal">
+            <div class="producto-galeria">
+                <img src="img/pieza2.png" alt="Imagen del producto" id="img-producto">
+            </div>
+
+            <div class="producto-info">
+                <h2 id="titulo-producto">Cargando producto...</h2>
+                <div class="precio-contenedor">
+                    <span class="precio-destacado" id="precio-producto">$0.00</span>
+                    <p class="iva-texto">IVA incluido • a 6 pagos sin intereses</p>
+                </div>
+
+                <div class="caracteristicas-rapidas">
+                    <p id="desc-producto">Descripción breve del producto.</p>
+                    <ul>
+                        <li>✔️ Garantía de <span id="garantia-producto">--</span></li>
+                        <li>✔️ Calidad OEM o superior</li>
+                        <li>✔️ Instalación directa</li>
+                    </ul>
+                    <p class="stock-estado">🟢 En stock - <span id="stock-producto">0</span> disponibles</p>
+                </div>
+
+                <button id="btn-agregar-carrito" class="btn-primario-grande" data-id="">Agregar al carrito</button>
+                
+                <div class="info-envio">
+                    <small>Envío estimado 2-4 días | Compra protegida</small>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Inferior: Especificaciones -->
+        <section class="producto-especificaciones">
+            <h3>Especificaciones y compatibilidad</h3>
+            <div class="especificaciones-grid">
+                <div class="columna-info">
+                    <h4>Información técnica</h4>
+                    <div class="fila-especificacion">
+                        <span>Marca</span>
+                        <strong id="spec-marca">--</strong>
+                    </div>
+                    <div class="fila-especificacion">
+                        <span>Número de parte</span>
+                        <strong id="spec-numero">--</strong>
+                    </div>
+                </div>
+                <div class="columna-info">
+                    <h4>Vehículos compatibles</h4>
+                    <div class="fila-especificacion">
+                        <span>Universal / Aplicación general</span>
+                        <strong>✔️</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/producto.js"></script>
+</body>
+</html>

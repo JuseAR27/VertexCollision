@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil | Vertex Collision</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/authStyle.css">
+</head>
+<body>
+    <header>
+        <h1>Vertex Collision</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="perfil.html" id="nav-login">Mi Cuenta</a>
+        </nav>
+    </header>
+
+    <main class="contenedor-auth">
+        <form id="form-perfil" class="formulario-caja">
+            <h2>Mi Perfil</h2>
+            <p>Actualiza tu información personal.</p>
+            
+            <div class="grupo-input">
+                <label for="perfil-nombre">Nombre Completo</label>
+                <input type="text" id="perfil-nombre" required>
+            </div>
+
+            <div class="grupo-input">
+                <label for="perfil-correo">Correo Electrónico (No editable)</label>
+                <!-- Usamos readonly para proteger la integridad del dato -->
+                <input type="email" id="perfil-correo" readonly style="background-color: #1a1c23; color: #666; cursor: not-allowed;">
+            </div>
+
+            <div class="grupo-input">
+                <label for="perfil-telefono">Teléfono (Celular)</label>
+                <input type="tel" id="perfil-telefono" required>
+            </div>
+
+            <div class="grupo-input">
+                <label for="perfil-contrasena">Nueva Contraseña (Opcional)</label>
+                <input type="password" id="perfil-contrasena" placeholder="Déjalo en blanco para no cambiarla" minlength="6">
+            </div>
+
+            <button type="submit" class="btn-primario-grande">Guardar Cambios</button>
+        </form>
+    </main>
+
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/perfil.js"></script>
+</body>
+</html>

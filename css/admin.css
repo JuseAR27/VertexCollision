@@ -1,0 +1,207 @@
+.contenedor-admin {
+    display: flex;
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+/* Menú lateral (Tabs) */
+.menu-admin {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.tab-btn {
+    background-color: var(--color-fondo-tarjeta);
+    color: var(--color-texto-principal);
+    border: 1px solid var(--color-borde);
+    padding: 15px;
+    text-align: left;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    border-color: var(--color-primario);
+}
+
+.tab-btn.activo {
+    background-color: var(--color-primario);
+    color: white;
+    border-color: var(--color-primario);
+}
+
+/* Área de contenido */
+.contenido-admin {
+    flex-grow: 1;
+    background-color: var(--color-fondo-tarjeta);
+    border: 1px solid var(--color-borde);
+    border-radius: 12px;
+    padding: 30px;
+}
+
+.admin-panel {
+    display: none; /* Ocultamos todas por defecto */
+}
+
+.admin-panel.activo {
+    display: block; /* Mostramos solo la activa */
+}
+
+.panel-header-admin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+/* Tablas Administrativas */
+.tabla-responsiva {
+    overflow-x: auto;
+}
+
+.tabla-admin {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--color-texto-principal);
+}
+
+.tabla-admin th, .tabla-admin td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla-admin th {
+    background-color: var(--color-fondo-base);
+    color: var(--color-texto-secundario);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.tabla-admin tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Botón editar tabla */
+.btn-editar {
+    background-color: #2196F3;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-editar:hover { background-color: #1976D2; }
+
+/* Modal (Ventana emergente) */
+.modal-oculto {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-contenido {
+    background-color: var(--color-fondo-tarjeta);
+    border: 1px solid var(--color-borde);
+    padding: 30px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.modal-contenido label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--color-texto-secundario);
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+.modal-contenido input, 
+.modal-contenido select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--color-fondo-base); /* Fondo oscuro */
+    color: var(--color-texto-principal);
+    border: 1px solid var(--color-borde);
+    border-radius: 6px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.modal-contenido input:focus, 
+.modal-contenido select:focus {
+    border-color: var(--color-primario);
+}
+
+.modal-acciones {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+.modal-acciones button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border: none;
+}
+
+#btn-cancelar-modal, #btn-cancelar-modal-ped {
+    background-color: transparent;
+    color: var(--color-texto-secundario);
+    border: 1px solid var(--color-borde);
+}
+
+#btn-cancelar-modal:hover, #btn-cancelar-modal-ped:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-texto-principal);
+}
+
+/* Botón Guardar / Actualizar */
+.modal-acciones button[type="submit"] {
+    background-color: var(--color-primario);
+    color: white;
+}
+
+.modal-acciones button[type="submit"]:hover {
+    background-color: var(--color-primario-hover);
+}
+
+@media (max-width: 768px) {
+    .contenedor-admin { flex-direction: column; }
+    .menu-admin { width: 100%; }
+}

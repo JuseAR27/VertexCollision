@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo | Vertex Collision</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/catalogo.css">
+</head>
+<body>
+    <header>
+        <h1>Vertex Collision</h1>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="catalogo.html">Catálogo</a>
+            <a href="carrito.html">Carrito</a>
+            <a href="perfil.html" id="nav-login">Iniciar Sesión</a>
+        </nav>
+    </header>
+
+    <main style="padding: 2rem 5%;">
+        <section class="panel-compatibilidad">
+            <div class="panel-header">
+                <span class="subtitulo-naranja">ENCUENTRA CON PRECISIÓN</span>
+                <h2>Catálogo de piezas</h2>
+                <p>Selecciona tu vehículo para verificar compatibilidad</p>
+            </div>
+
+            <div class="selectores-grid">
+                <div class="grupo-select">
+                    <label>MARCA</label>
+                    <select id="sel-marca">
+                        <option value="">Selecciona</option>
+                    </select>
+                </div>
+                <div class="grupo-select">
+                    <label>MODELO</label>
+                    <select id="sel-modelo" disabled>
+                        <option value="">Selecciona</option>
+                    </select>
+                </div>
+                <div class="grupo-select">
+                    <label>AÑO</label>
+                    <select id="sel-anio" disabled>
+                        <option value="">Selecciona</option>
+                    </select>
+                </div>
+                <div class="grupo-select">
+                    <label>MOTOR</label>
+                    <select id="sel-motor" disabled>
+                        <option value="">Selecciona</option>
+                    </select>
+                </div>
+                <button id="btn-buscar-piezas" class="btn-buscar-naranja" disabled>
+                    Buscar piezas
+                </button>
+            </div>
+        </section>
+
+        <!-- Filtros de texto por nombre y categoría que ya teníamos -->
+        <div class="controles-busqueda">
+            <input type="text" id="input-busqueda" placeholder="Busca pieza, marca o número de parte...">
+            <button id="btn-limpiar-filtros" class="btn-limpiar">Limpiar filtro de auto</button>
+        </div>
+
+        <div id="contenedor-productos" class="grid-productos">
+            <!-- Los productos se generarán aquí -->
+        </div>
+    </main>
+
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/catalogo.js"></script>
+</body>
+</html>
