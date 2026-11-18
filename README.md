@@ -7,22 +7,26 @@ Vertex Collision es una plataforma de comercio electrónico frontend enfocada en
 ## Tecnologías Utilizadas
 * **HTML5:** Estructura semántica del sitio.
 * **CSS3:** Estilos personalizados, CSS Grid, Flexbox y variables CSS para el manejo del tema oscuro.
-* **JavaScript:** Lógica del negocio, manipulación del DOM, eventos y renderizado dinámico de la interfaz.
-* **LocalStorage:** Simulación de base de datos relacional para la persistencia de datos.
+* **JavaScript:** Lógica del negocio en el cliente, manipulación del DOM y consumo de la API REST.
+* **Node.js y Express.js:** Servidor backend para la creación de la API REST y manejo de rutas.
+* **SQLite:** Motor de base de datos relacional para la persistencia real de usuarios, productos, inventario y vehículos compatibles.
+
+## Requisitos Previos
+Para ejecutar este proyecto, asegúrate de tener instalado [Node.js](https://nodejs.org/) en tu computadora.
 
 ## Instrucciones de Ejecución
 Para visualizar y probar este proyecto correctamente en tu entorno local:
 
 1. Clona o descarga este repositorio en tu computadora.
 2. Abre la carpeta del proyecto en tu editor de código (se recomienda **Visual Studio Code**).
-3. Instala la extensión **Live Server** en VS Code si aún no la tienes.
-4. Haz clic derecho sobre el archivo `index.html` y selecciona **"Open with Live Server"**.
-5. El proyecto se abrirá automáticamente en tu navegador predeterminado. 
+3. Abre una nueva terminal dentro del editor y ejecuta el siguiente comando para descargar las dependencias necesarias: npm install
+4. Una vez finalizada la instalación, levanta el servidor ejecutando: npm start.
+5. Abre tu navegador web predeterminado e ingresa a la direccion generada
 
 ## Funcionalidades Implementadas
-* **Catálogo Dinámico y Búsqueda:** Listado de productos renderizado mediante JavaScript. Incluye una barra de búsqueda por texto y un filtro avanzado de **Compatibilidad de Vehículos**.
-* **Carrito de Compras Interactivo:** Permite agregar productos, modificar cantidades, eliminar artículos y calcular automáticamente el subtotal y total. El contador del carrito en la barra de navegación se actualiza en tiempo real sin recargar la página.
-* **Gestión de Usuarios:** Registro de nuevos clientes, inicio de sesión simulado, protección de rutas, cierre de sesión y perfil de usuario editable.
+* **Catálogo Dinámico y Búsqueda:** Listado de productos renderizado desde la base de datos. Incluye una barra de búsqueda por texto y un filtro avanzado relacional de **Compatibilidad de Vehículos**.
+* **Carrito de Compras Interactivo:** Permite agregar productos, modificar cantidades y calcular automáticamente el total. El inventario se valida contra el stock real en SQLite.
+* **Gestión de Usuarios:** Registro de nuevos clientes, inicio de sesión mediante validación en el servidor y protección de rutas.
 * **Historial de Pedidos:** Generación de órdenes de compra que reducen dinámicamente el stock del inventario. Visualización detallada de compras pasadas por usuario.
 * **Panel de Administrador (Dashboard):** Vista protegida exclusivamente para el rol `admin`. Permite gestionar el inventario (agregar y modificar productos), actualizar el estado de los pedidos realizados y consultar la lista de usuarios registrados.
 
