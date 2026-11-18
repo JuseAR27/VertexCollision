@@ -1,185 +1,276 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const todosLosProductos = VertexDB.obtenerProductos();
-    
-    // Inicializar catálogo base
-    renderizarCatalogo(todosLosProductos);
+const SELECTORES_CATALOGO = {
+  gridProductos: '#catalogoGrid, #contenedor-productos, #listaProductos, #productos-grid, .catalogo-grid, .productos-grid',
+  inputBusqueda: 'input[placeholder*="Busca"], #inputBuscar, #buscador, input[type="search"], input[type="text"]'
+};
 
-    // Variables de Estado para el filtro relacional
-    let marcas = VertexDB.obtenerTabla('MARCAS');
-    let modelos = VertexDB.obtenerTabla('MODELOS');
-    let vehiculos = VertexDB.obtenerTabla('VEHICULOS');
-
-    // Referencias al DOM
-    const selMarca = document.getElementById('sel-marca');
-    const selModelo = document.getElementById('sel-modelo');
-    const selAnio = document.getElementById('sel-anio');
-    const selMotor = document.getElementById('sel-motor');
-    const btnBuscarPiezas = document.getElementById('btn-buscar-piezas');
-    const btnLimpiar = document.getElementById('btn-limpiar-filtros');
-    const inputBusquedaTexto = document.getElementById('input-busqueda');
-
-    // 1. Cargar Marcas Iniciales
-    cargarOpciones(selMarca, marcas, 'id_marca_auto', 'nombre_marca');
-
-    // 2. Evento: Al seleccionar MARCA
-    selMarca.addEventListener('change', (e) => {
-        const idMarca = parseInt(e.target.value);
-        resetearSelects([selModelo, selAnio, selMotor]);
-        btnBuscarPiezas.disabled = true;
-
-        if (idMarca) {
-            // Filtrar modelos que pertenezcan a la marca seleccionada (FK id_marca_auto)
-            const modelosFiltrados = modelos.filter(m => m.id_marca_auto === idMarca);
-            cargarOpciones(selModelo, modelosFiltrados, 'id_modelo_auto', 'nombre_modelo');
-            selModelo.disabled = false;
-        }
-    });
-
-    // 3. Evento: Al seleccionar MODELO
-    selModelo.addEventListener('change', (e) => {
-        const idModelo = parseInt(e.target.value);
-        resetearSelects([selAnio, selMotor]);
-        btnBuscarPiezas.disabled = true;
-
-        if (idModelo) {
-            // Extraemos los años únicos disponibles para ese modelo específico en la tabla VEHICULOS
-            const vehiculosModelo = vehiculos.filter(v => v.id_modelo_auto === idModelo);
-            const aniosUnicos = [...new Set(vehiculosModelo.map(v => v.anio_fabricacion))];
-            
-            // Creamos un array de objetos temporal para reutilizar cargarOpciones
-            const opcionesAnio = aniosUnicos.map(a => ({ id: a, nombre: a }));
-            cargarOpciones(selAnio, opcionesAnio, 'id', 'nombre');
-            selAnio.disabled = false;
-        }
-    });
-
-    // 4. Evento: Al seleccionar AÑO
-    selAnio.addEventListener('change', (e) => {
-        const anio = parseInt(e.target.value);
-        const idModelo = parseInt(selModelo.value);
-        resetearSelects([selMotor]);
-        btnBuscarPiezas.disabled = true;
-
-        if (anio) {
-            // Extraemos el motor específico para ese modelo y año
-            const vehiculosFiltrados = vehiculos.filter(v => v.id_modelo_auto === idModelo && v.anio_fabricacion === anio);
-            cargarOpciones(selMotor, vehiculosFiltrados, 'id_vehiculo', 'motor');
-            selMotor.disabled = false;
-        }
-    });
-
-    // 5. Evento: Al seleccionar MOTOR (Último paso)
-    selMotor.addEventListener('change', (e) => {
-        if (e.target.value) {
-            btnBuscarPiezas.disabled = false; // Habilitamos el botón de búsqueda
-        } else {
-            btnBuscarPiezas.disabled = true;
-        }
-    });
-
-    // 6. Acción: Buscar Piezas (JOIN Simulado)
-    btnBuscarPiezas.addEventListener('click', () => {
-        const idVehiculo = selMotor.value;
-        const productosCompatibles = VertexDB.obtenerProductosCompatibles(idVehiculo);
-        
-        // Limpiamos la búsqueda por texto si está activa
-        inputBusquedaTexto.value = '';
-        
-        renderizarCatalogo(productosCompatibles);
-        btnLimpiar.style.display = 'block'; // Mostramos el botón de limpiar
-    });
-
-    // 7. Acción: Limpiar Filtros
-    btnLimpiar.addEventListener('click', () => {
-        selMarca.value = "";
-        resetearSelects([selModelo, selAnio, selMotor]);
-        btnBuscarPiezas.disabled = true;
-        btnLimpiar.style.display = 'none';
-        
-        renderizarCatalogo(todosLosProductos); // Restaurar catálogo completo
-    });
-
-    // Búsqueda por texto (mantenemos la funcionalidad anterior)
-    inputBusquedaTexto.addEventListener('input', () => {
-        const textoBusqueda = inputBusquedaTexto.value.toLowerCase();
-        const productosFiltrados = todosLosProductos.filter(producto => 
-            producto.nombre.toLowerCase().includes(textoBusqueda) || 
-            producto.numeroParte.toLowerCase().includes(textoBusqueda)
-        );
-        renderizarCatalogo(productosFiltrados);
-    });
+document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const estadoFiltro = {
+    buscar: params.get('buscar') || '',
+    categoria: params.get('categoria') || 'todas',
+    marca: '',
+    modelo: '',
+    anio: '',
+    motor: ''
+  };
+  asegurarContenedoresEnOrden();
+  await configurarCascadaVehiculos(estadoFiltro);
+  await renderizarBotonesCategorias(estadoFiltro);
+  configurarBuscadorTexto(estadoFiltro);
+  await cargarProductosCatalogo(estadoFiltro);
 });
 
-// Funciones Auxiliares
-function cargarOpciones(selectElement, arrayDatos, propValor, propTexto) {
-    selectElement.innerHTML = '<option value="">Selecciona</option>'; // Limpiar
-    arrayDatos.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item[propValor];
-        option.textContent = item[propTexto];
-        selectElement.appendChild(option);
-    });
+function asegurarContenedoresEnOrden() {
+  const main = document.querySelector('main') || document.body;
+  let grid = document.querySelector(SELECTORES_CATALOGO.gridProductos);
+
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.id = 'catalogoGrid';
+    grid.style.cssText = 'display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; max-width: 1140px; margin: 20px auto 50px auto; padding: 0 20px;';
+    main.appendChild(grid);
+  }
+
+  let barraCategorias = document.getElementById('barra-categorias-catalogo');
+  if (!barraCategorias) {
+    barraCategorias = document.createElement('div');
+    barraCategorias.id = 'barra-categorias-catalogo';
+    barraCategorias.style.cssText = 'display: flex; flex-wrap: wrap; gap: 10px; max-width: 1140px; margin: 16px auto 8px auto; padding: 0 20px; align-items: center;';
+  }
+  grid.parentNode.insertBefore(barraCategorias, grid);
 }
 
-function resetearSelects(arraySelects) {
-    arraySelects.forEach(sel => {
-        sel.innerHTML = '<option value="">Selecciona</option>';
-        sel.disabled = true;
-    });
-}
+async function configurarCascadaVehiculos(estadoFiltro) {
+  const selects = Array.from(document.querySelectorAll('select'));
+  if (selects.length < 4) return;
 
-function renderizarCatalogo(listaProductos) {
-    const contenedor = document.getElementById('contenedor-productos');
-    contenedor.innerHTML = '';
+  const [selMarca, selModelo, selAnio, selMotor] = selects;
+  let vehiculos = [];
 
-    if (listaProductos.length === 0) {
-        contenedor.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: var(--color-texto-secundario);">No se encontraron piezas compatibles con esta selección.</p>';
-        return;
+  try {
+    vehiculos = await VertexDB.obtenerVehiculos();
+  } catch (err) {
+    console.error('No se pudieron cargar los vehículos:', err);
+    return;
+  }
+
+  const marcas = [...new Set(vehiculos.map((v) => v.nombre_marca))];
+  selMarca.innerHTML = '<option value="">Selecciona</option>' +
+    marcas.map((m) => `<option value="${m}">${m}</option>`).join('');
+  selMarca.disabled = false;
+
+  // Bloqueamos los selectores siguientes hasta que se elija el anterior
+  const reiniciarSelect = (sel) => {
+    sel.innerHTML = '<option value="">Selecciona</option>';
+    sel.disabled = true;
+    sel.removeAttribute('disabled');
+    sel.disabled = true;
+  };
+
+  reiniciarSelect(selModelo);
+  reiniciarSelect(selAnio);
+  reiniciarSelect(selMotor);
+
+  // Al elegir MARCA -> habilita MODELO
+  selMarca.addEventListener('change', () => {
+    const marca = selMarca.value;
+    estadoFiltro.marca = marca;
+    estadoFiltro.modelo = '';
+    estadoFiltro.anio = '';
+    estadoFiltro.motor = '';
+
+    reiniciarSelect(selAnio);
+    reiniciarSelect(selMotor);
+
+    if (!marca) {
+      reiniciarSelect(selModelo);
+      return;
     }
 
-    listaProductos.forEach(producto => {
-        const tarjeta = document.createElement('div');
-        tarjeta.classList.add('tarjeta-producto');
-        tarjeta.innerHTML = `
-            <a href="producto.html?id=${producto.id}" style="text-decoration: none;">
-                <img src="img/pieza2.png" alt="${producto.nombre}">
-                <h3>${producto.nombre}</h3>
-                <p style="color: var(--color-texto-secundario); font-size: 0.85rem; margin-bottom: 5px;">SKU: ${producto.numeroParte}</p>
-                <p class="precio">$${producto.precio.toFixed(2)}</p>
-            </a>
-            <button class="btn-agregar" data-id="${producto.id}">Agregar al carrito</button>
-        `;
-        contenedor.appendChild(tarjeta);
-    });
+    const modelos = [...new Set(
+      vehiculos.filter((v) => v.nombre_marca === marca).map((v) => v.nombre_modelo)
+    )];
 
-    // Reasignar eventos al carrito
-    document.querySelectorAll('.btn-agregar').forEach(boton => {
-        boton.addEventListener('click', (evento) => {
-            VertexDB.agregarAlCarrito(evento.target.getAttribute('data-id'));
-            if(typeof actualizarContadorCarrito === 'function') {
-                actualizarContadorCarrito();
-            }
-            alert('¡Producto agregado al carrito!');
-        });
+    selModelo.innerHTML = '<option value="">Selecciona</option>' +
+      modelos.map((mod) => `<option value="${mod}">${mod}</option>`).join('');
+    selModelo.disabled = false;
+    selModelo.removeAttribute('disabled');
+  });
+
+  // Al elegir MODELO -> habilita AÑO
+  selModelo.addEventListener('change', () => {
+    const marca = selMarca.value;
+    const modelo = selModelo.value;
+    estadoFiltro.modelo = modelo;
+    estadoFiltro.anio = '';
+    estadoFiltro.motor = '';
+
+    reiniciarSelect(selMotor);
+
+    if (!modelo) {
+      reiniciarSelect(selAnio);
+      return;
+    }
+
+    const anios = [...new Set(
+      vehiculos
+        .filter((v) => v.nombre_marca === marca && v.nombre_modelo === modelo)
+        .map((v) => v.anio_fabricacion)
+    )];
+
+    selAnio.innerHTML = '<option value="">Selecciona</option>' +
+      anios.map((a) => `<option value="${a}">${a}</option>`).join('');
+    selAnio.disabled = false;
+    selAnio.removeAttribute('disabled');
+  });
+
+  // Al elegir AÑO -> habilita MOTOR
+  selAnio.addEventListener('change', () => {
+    const marca = selMarca.value;
+    const modelo = selModelo.value;
+    const anio = selAnio.value;
+    estadoFiltro.anio = anio;
+    estadoFiltro.motor = '';
+
+    if (!anio) {
+      reiniciarSelect(selMotor);
+      return;
+    }
+
+    const motores = [...new Set(
+      vehiculos
+        .filter((v) =>
+          v.nombre_marca === marca &&
+          v.nombre_modelo === modelo &&
+          String(v.anio_fabricacion) === String(anio)
+        )
+        .map((v) => v.motor)
+    )];
+
+    selMotor.innerHTML = '<option value="">Selecciona</option>' +
+      motores.map((mot) => `<option value="${mot}">${mot}</option>`).join('');
+    selMotor.disabled = false;
+    selMotor.removeAttribute('disabled');
+  });
+
+  // Al elegir MOTOR -> guarda valor
+  selMotor.addEventListener('change', () => {
+    estadoFiltro.motor = selMotor.value;
+  });
+
+  // Botón "Buscar piezas"
+  const botones = Array.from(document.querySelectorAll('button'));
+  const btnBuscar = botones.find((b) => b.textContent.toLowerCase().includes('buscar'));
+  if (btnBuscar) {
+    btnBuscar.disabled = false;
+    btnBuscar.style.cursor = 'pointer';
+    btnBuscar.addEventListener('click', (e) => {
+      e.preventDefault();
+      estadoFiltro.marca = selMarca.value;
+      estadoFiltro.modelo = selModelo.value;
+      estadoFiltro.anio = selAnio.value;
+      estadoFiltro.motor = selMotor.value;
+      cargarProductosCatalogo(estadoFiltro);
     });
+  }
 }
 
-function asignarEventosBotones() {
-    const botones = document.querySelectorAll('.btn-agregar');
-    botones.forEach(boton => {
-        boton.addEventListener('click', (evento) => {
-            // Evitamos el comportamiento por defecto por si el botón está dentro de un formulario
-            evento.preventDefault(); 
-            
-            const idProducto = evento.target.getAttribute('data-id');
-            VertexDB.agregarAlCarrito(idProducto);
-            
-            // ¡NUEVO! Llamamos a la función global que está en js/app.js
-            if(typeof actualizarContadorCarrito === 'function') {
-                actualizarContadorCarrito();
-            }
-            
-            alert('¡Producto agregado al carrito!');
-        });
+/**
+ * Renderiza las categorías en la barra superior
+ */
+async function renderizarBotonesCategorias(estadoFiltro) {
+  try {
+    const categorias = await VertexDB.obtenerCategorias();
+    const barra = document.getElementById('barra-categorias-catalogo');
+    if (!barra) return;
+
+    barra.innerHTML = [
+      `<span style="color: #8b949e; font-size: 0.9rem; font-weight: bold; margin-right: 6px;">Categorías:</span>`,
+      `<button type="button" data-cat="todas" style="padding: 8px 16px; border-radius: 20px; border: 1px solid ${estadoFiltro.categoria === 'todas' ? '#ff5722' : '#30363d'}; background: ${estadoFiltro.categoria === 'todas' ? '#ff5722' : '#161b22'}; color: #fff; cursor: pointer; font-weight: 600;">Todas</button>`,
+      ...categorias.map((c) => {
+        const esActiva = String(estadoFiltro.categoria) === String(c.id_categoria);
+        return `
+          <button type="button" data-cat="${c.id_categoria}" style="padding: 8px 16px; border-radius: 20px; border: 1px solid ${esActiva ? '#ff5722' : '#30363d'}; background: ${esActiva ? '#ff5722' : '#161b22'}; color: #fff; cursor: pointer; font-weight: 600;">
+            ${c.nombre_categoria}
+          </button>
+        `;
+      })
+    ].join('');
+
+    barra.querySelectorAll('button[data-cat]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        estadoFiltro.categoria = btn.getAttribute('data-cat');
+        renderizarBotonesCategorias(estadoFiltro);
+        cargarProductosCatalogo(estadoFiltro);
+      });
     });
+  } catch (err) {
+    console.error('Error al mostrar categorías:', err);
+  }
+}
+
+/**
+ * Conecta el buscador de texto con la consulta al servidor
+ */
+function configurarBuscadorTexto(estadoFiltro) {
+  const input = document.querySelector(SELECTORES_CATALOGO.inputBusqueda);
+  if (!input) return;
+
+  if (estadoFiltro.buscar) input.value = estadoFiltro.buscar;
+
+  input.addEventListener('input', (e) => {
+    estadoFiltro.buscar = e.target.value;
+    cargarProductosCatalogo(estadoFiltro);
+  });
+}
+
+/**
+ * Dibuja las tarjetas de productos en el catálogo
+ */
+async function cargarProductosCatalogo(estadoFiltro) {
+  const grid = document.querySelector(SELECTORES_CATALOGO.gridProductos);
+  if (!grid) return;
+
+  try {
+    const productos = await VertexDB.obtenerProductos(estadoFiltro);
+
+    if (productos.length === 0) {
+      grid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 36px; background: #161b22; border: 1px solid #262c36; border-radius: 10px;">
+          <p style="color: #f0f6fc; font-size: 1.05rem; margin-bottom: 14px;">No se encontraron piezas para los filtros seleccionados.</p>
+          <button id="btnRestablecerCatalogo" style="background: #ff5722; color: #fff; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold;">
+            Limpiar filtros y ver todo
+          </button>
+        </div>
+      `;
+      document.getElementById('btnRestablecerCatalogo')?.addEventListener('click', () => {
+        window.location.href = 'catalogo.html';
+      });
+      return;
+    }
+
+    grid.innerHTML = productos.map((prod) => `
+      <article class="producto-card product-card" style="background: #161b22; border: 1px solid #262c36; border-radius: 10px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; color: #f0f6fc;">
+        <div>
+          <img src="${prod.imagen}" alt="${prod.nombre_producto}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; background: #fff;">
+          <span style="font-size: 0.78rem; color: #ff5722; font-weight: bold; text-transform: uppercase;">
+            ${prod.nombre_categoria} | ${prod.nombre_fabricante}
+          </span>
+          <h3 style="margin: 8px 0; font-size: 1.1rem; color: #fff;">${prod.nombre_producto}</h3>
+          <p style="font-size: 0.9rem; color: #8b949e; margin-bottom: 12px;">${prod.descripcion}</p>
+        </div>
+        <div>
+          <p style="font-size: 1.25rem; font-weight: bold; color: #ffffff; margin: 8px 0;">$${Number(prod.precio_unitario).toFixed(2)} MXN</p>
+          <p style="font-size: 0.85rem; color: ${prod.stock > 0 ? '#3fb950' : '#f85149'}; margin-bottom: 12px;">
+            ${prod.stock > 0 ? `En existencia (${prod.stock} disponibles)` : 'Agotado'}
+          </p>
+          <a href="producto.html?id=${prod.id_producto}" style="display: block; text-align: center; background: #ff5722; color: #ffffff; padding: 10px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+            Ver detalle
+          </a>
+        </div>
+      </article>
+    `).join('');
+  } catch (err) {
+    grid.innerHTML = `<p style="color: #f85149;">Error al cargar productos: ${err.message}</p>`;
+  }
 }

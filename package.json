@@ -1,0 +1,19 @@
+{
+  "name": "vertex-collision-backend",
+  "version": "1.0.0",
+  "description": "Backend con Node.js, Express y SQLite para e-commerce automotriz Vertex Collision",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7"
+  },
+  "overrides": {
+    "tar": "^6.2.1",
+    "glob": "^10.3.10",
+    "rimraf": "^5.0.5"
+  }
+}

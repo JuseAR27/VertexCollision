@@ -1,21 +1,38 @@
-// js/login.js
+const SELECTORES_LOGIN = {
+  formulario: '#formLogin, form',
+  correo: '#correo, #email, input[type="email"]',
+  contrasena: '#contrasena, #password, input[type="password"]'
+};
+
 document.addEventListener('DOMContentLoaded', () => {
-    const formulario = document.getElementById('form-login');
+  const formulario = document.querySelector(SELECTORES_LOGIN.formulario);
+  if (!formulario) return;
 
-    formulario.addEventListener('submit', (evento) => {
-        evento.preventDefault();
+  formulario.addEventListener('submit', async (evento) => {
+    evento.preventDefault();
 
-        const correo = document.getElementById('correo-login').value;
-        const contrasena = document.getElementById('contrasena-login').value;
+    const inputCorreo = formulario.querySelector(SELECTORES_LOGIN.correo);
+    const inputContrasena = formulario.querySelector(SELECTORES_LOGIN.contrasena);
 
-        // Validamos las credenciales
-        const exito = VertexDB.iniciarSesion(correo, contrasena);
+    const correo = inputCorreo ? inputCorreo.value.trim() : '';
+    const contrasena = inputContrasena ? inputContrasena.value : '';
 
-        if (exito) {
-            alert('Sesión iniciada correctamente.');
-            window.location.href = 'index.html'; // Llevamos al usuario a la página principal
-        } else {
-            alert('Correo o contraseña incorrectos. Por favor, intenta de nuevo.');
-        }
-    });
+    if (!correo || !contrasena) {
+      alert('Por favor ingresa tu correo y contraseña.');
+      return;
+    }
+
+    try {
+      const usuario = await VertexDB.iniciarSesion(correo, contrasena);
+
+      // Si el usuario está en la tabla ADMINISTRADOR lo enviamos al panel admin
+      if (usuario.rol === 'admin') {
+        window.location.href = 'admin.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  });
 });

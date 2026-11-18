@@ -1,0 +1,21 @@
+# Dependencias de Node.js (se regeneran con npm install)
+node_modules/
+
+# Archivos de registro de errores de npm
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Base de datos SQLite y archivos temporales de lectura/escritura
+# (Nota: Pon un # delante de *.db si deseas subir tu base de datos a GitHub)
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+
+# Variables de entorno locales
+.env
+
+# Archivos del sistema operativo y editores
+.DS_Store
+Thumbs.db
