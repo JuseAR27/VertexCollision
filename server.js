@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname)));
 
-// 1. POST /api/usuarios - Registrar nuevo usuario
+// POST /api/usuarios - Registrar nuevo usuario
 app.post('/api/usuarios', (req, res) => {
   const { nombre_completo, correo, contrasena, telefono } = req.body;
 
@@ -43,7 +43,7 @@ app.post('/api/usuarios', (req, res) => {
   });
 });
 
-// 2. POST /api/auth/login - Iniciar sesión
+// POST /api/auth/login - Iniciar sesión
 app.post('/api/auth/login', (req, res) => {
   const { correo, contrasena } = req.body;
 
@@ -78,7 +78,7 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
-// 3. GET /api/categorias - Consultar categorías
+// GET /api/categorias - Consultar categorías
 app.get('/api/categorias', (req, res) => {
   db.all('SELECT * FROM CATEGORIA ORDER BY id_categoria ASC', [], (err, rows) => {
     if (err) return res.status(500).json({ error: 'Error al consultar las categorías.' });
@@ -86,7 +86,7 @@ app.get('/api/categorias', (req, res) => {
   });
 });
 
-// 4. GET /api/vehiculos - Consultar marcas, modelos, años y motores
+// GET /api/vehiculos - Consultar marcas, modelos, años y motores
 app.get('/api/vehiculos', (req, res) => {
   const sql = `
     SELECT v.id_vehiculo, ma.id_marca_auto, ma.nombre_marca,
@@ -104,7 +104,7 @@ app.get('/api/vehiculos', (req, res) => {
   });
 });
 
-// 5. GET /api/productos - Consultar catálogo y filtrar por búsqueda, categoría o vehículo
+// GET /api/productos - Consultar catálogo y filtrar por búsqueda, categoría o vehículo
 app.get('/api/productos', (req, res) => {
   const { buscar, categoria, marca, modelo, anio, motor } = req.query;
 
@@ -163,7 +163,7 @@ app.get('/api/productos', (req, res) => {
   });
 });
 
-// 6. GET /api/productos/:id - Consultar detalle completo de un producto y sus autos compatibles
+// GET /api/productos/:id - Consultar detalle completo de un producto y sus autos compatibles
 app.get('/api/productos/:id', (req, res) => {
   const { id } = req.params;
 
